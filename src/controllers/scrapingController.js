@@ -450,55 +450,43 @@ export const getSearch = async (req, res) => {
 
 export const getAnimeDetail = async (req, res) => {
   const { animeId } = req.params;
-  const url = `https://hianime.to/${animeId}`;
+  const url = `https://samehadaku.mba/anime/${animeId}`;
 
   try {
     const html = await fetchPage(url);
     const $ = load(html);
 
-    const title = $(".film-name.dynamic-name").text().trim();
-    const imageSrc = $(".anisc-poster .film-poster-img").attr("src");
-    const description = $(".film-description .text").text().trim();
-    const japaneseTitle = $(".item-title:contains('Japanese:') .name")
-      .text()
-      .trim();
-    const synonyms = $(".item-title:contains('Synonyms:') .name").text().trim();
-    const aired = $(".item-title:contains('Aired:') .name").text().trim();
-    const premiered = $(".item-title:contains('Premiered:') .name")
-      .text()
-      .trim();
-    const duration = $(".item-title:contains('Duration:') .name").text().trim();
-    const status = $(".item-title:contains('Status:') .name").text().trim();
-    const malScore = $(".item-title:contains('MAL Score:') .name")
-      .text()
-      .trim();
-    const watchUrl = "https://hianime.to" + $(".btn-play").attr("href");
-    const genres = [];
-    $(".item-list:contains('Genres:') a").each((index, element) => {
-      genres.push($(element).text().trim());
-    });
-    const studios = [];
-    $(".item-title:contains('Studios:') a").each((index, element) => {
-      studios.push($(element).text().trim());
-    });
-    const producers = [];
-    $(".item-title:contains('Producers:') a").each((index, element) => {
-      producers.push($(element).text().trim());
-    });
-
+    const title = $(".entry-title")..first()text().trim();
+    const imageSrc = $(".anmsa").attr("src");
+    const description = $(".desc .entry-content-single p").text().trim();
+    const japaneseTitle = $(".spe span:has(b:contains('Japanese'))").text().trim();
+    const synonyms = $(".spe span:has(b:contains('Synonyms'))").text().trim();
+    const status = $(".spe span:has(b:contains('Status'))").text().trim();
+    const type = $(".spe span:has(b:contains('Type'))").text().trim();
+const source = $(".spe span:has(b:contains('Source'))").text().trim();
+    const season = $(".spe span:has(b:contains('Season'))").text().trim();
+const studios = $(".spe span:has(b:contains('Studio')) a")
+  .map((i, el) => $(el).text().trim())
+  .get();
+const producers = $(".spe span:has(b:contains('Producers')) a")
+  .map((i, el) => $(el).text().trim())
+  .get();
+const released = $(".spe span:has(b:contains('Released'))").text().trim();
+    const genres = $(".genre-info a")
+  .map((i, el) => $(el).text().trim())
+  .get();
     const animeDetails = {
       title,
       imageSrc,
       description,
       japaneseTitle,
       synonyms,
-      aired,
-      premiered,
-      duration,
       status,
-      malScore,
-      watchUrl,
+      type,
+      source,
+      season,
       genres,
+      released,
       studios,
       producers,
     };
